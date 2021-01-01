@@ -60,6 +60,13 @@ class AnimaSprite(pg.sprite.Sprite):
         # Меняем кадр - помещаем новый кадр в атрибут image:
         self.image = self.frames[self.cur_frame]
 
+    def go_right(self):
+        global x, walking
+        if walking:
+            self.rect.move(self.rect.x + 10, self.rect.y)
+            x += 15
+            pg.time.set_timer(one_step_event, 444)
+
 
 if __name__ == '__main__':
     pg.init()
@@ -68,6 +75,9 @@ if __name__ == '__main__':
     screen = pg.display.set_mode((size), pg.RESIZABLE)
     all_sprites = pg.sprite.Group()
     sheet_jotaro = load_image('jotaro_afk.png')
+    walking_jotaro = load_image('walking_jotaro.png')
+    one_step_event = pg.USEREVENT + 1
+    pg.time.set_timer(one_step_event, 0)
 
     # Задаём способ разрезания листа на кадры.
     # (столбцов, строк) --> (20, 1) --> 20 кадров:
@@ -75,17 +85,28 @@ if __name__ == '__main__':
 
     # Задаём координаты отрисовки спрайта в игровом окне:
     x, y = (0, 0)
-
     # Создаём экземпляр анимированного спрайта:
-    sprite_jotaro = AnimaSprite(sheet_jotaro, cols, rows, x, y)
-
+    sprite_jotaro = AnimaSprite(sheet_jotaro, 20, 1, x, y)
+    pg.key.set_repeat(200, 50)
     fps = 15
-    # Главный игровой цикл:
+    jotaro_on_monitor = False
     running = True
+    walking = False
+    # Главный игровой цикл:
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
+            elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT and not walking:
+                sprite_jotaro.kill()
+                sprite_walking_jotaro = AnimaSprite(walking_jotaro, 16, 1, x, y)
+                walking = True
+                sprite_walking_jotaro.go_right()
+            elif event.type == one_step_event:
+                sprite_walking_jotaro.kill()
+                pg.time.set_timer(one_step_event, 0)
+                sprite_jotaro = AnimaSprite(sheet_jotaro, 20, 1, x, y)
+                walking = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
         all_sprites.update()
