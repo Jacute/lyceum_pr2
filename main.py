@@ -63,8 +63,15 @@ class AnimaSprite(pg.sprite.Sprite):
     def go_right(self):
         global x, walking
         if walking:
-            self.rect.move(self.rect.x + 10, self.rect.y)
+            self.rect.move(self.rect.x + 15, self.rect.y)
             x += 15
+            pg.time.set_timer(one_step_event, 444)
+
+    def go_left(self):
+        global x, walking
+        if walking:
+            self.rect.move(self.rect.x - 15, self.rect.y)
+            x -= 15
             pg.time.set_timer(one_step_event, 444)
 
 
@@ -75,21 +82,21 @@ if __name__ == '__main__':
     screen = pg.display.set_mode((size), pg.RESIZABLE)
     all_sprites = pg.sprite.Group()
     sheet_jotaro = load_image('jotaro_afk.png')
-    walking_jotaro = load_image('walking_jotaro.png')
+    walking_jotaro_right = load_image('walking_jotaro_right.png')
+    walking_jotaro_left = load_image('walking_jotaro_left.png')
     one_step_event = pg.USEREVENT + 1
     pg.time.set_timer(one_step_event, 0)
 
     # Задаём способ разрезания листа на кадры.
     # (столбцов, строк) --> (20, 1) --> 20 кадров:
-    cols, rows = (20, 1)
+    cols, rows = (16, 1)
 
     # Задаём координаты отрисовки спрайта в игровом окне:
     x, y = (0, 0)
     # Создаём экземпляр анимированного спрайта:
     sprite_jotaro = AnimaSprite(sheet_jotaro, 20, 1, x, y)
-    pg.key.set_repeat(200, 50)
+    pg.key.set_repeat(200, 10)
     fps = 15
-    jotaro_on_monitor = False
     running = True
     walking = False
     # Главный игровой цикл:
@@ -97,11 +104,17 @@ if __name__ == '__main__':
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
-            elif event.type == pg.KEYDOWN and event.key == pg.K_RIGHT and not walking:
-                sprite_jotaro.kill()
-                sprite_walking_jotaro = AnimaSprite(walking_jotaro, 16, 1, x, y)
-                walking = True
-                sprite_walking_jotaro.go_right()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_RIGHT and not walking:
+                    sprite_jotaro.kill()
+                    sprite_walking_jotaro = AnimaSprite(walking_jotaro_right, 16, 1, x, y)
+                    walking = True
+                    sprite_walking_jotaro.go_right()
+                elif event.key == pg.K_LEFT and not walking:
+                    sprite_jotaro.kill()
+                    sprite_walking_jotaro = AnimaSprite(walking_jotaro_left, 16, 1, x, y)
+                    walking = True
+                    sprite_walking_jotaro.go_left()
             elif event.type == one_step_event:
                 sprite_walking_jotaro.kill()
                 pg.time.set_timer(one_step_event, 0)
