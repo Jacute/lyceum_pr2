@@ -18,22 +18,17 @@ class AnimaSprite(pg.sprite.Sprite):
     """Анимированный спрайт"""
     def __init__(self, sheet, cols, rows, x, y):
         super().__init__(all_sprites)
-
         # frames - атрибут класса,
         # список для хранения последовательности кадров спрайта:
         self.frames = []
-
         # Разрезаем лист на кадры,
         # используя функцию cut_sheet() из данного класса (см. ниже):
         self.cut_sheet(sheet, cols, rows)
-
         # Обнуляем номер текущего кадра:
         self.cur_frame = 0
-
         # image - атрибут класса,
         # в который помещаем текущий кадр:
         self.image = self.frames[self.cur_frame]
-
         # Помещаем прямоугольник с кадром в координаты (x, y):
         self.rect = self.rect.move(x, y)
 
@@ -56,7 +51,6 @@ class AnimaSprite(pg.sprite.Sprite):
         # но так, чтобы не выйти за границы списка frames.
         # Для этого закольцовываем счёт кадров при помощи операции %:
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-
         # Меняем кадр - помещаем новый кадр в атрибут image:
         self.image = self.frames[self.cur_frame]
 
@@ -86,11 +80,6 @@ if __name__ == '__main__':
     walking_jotaro_left = load_image('walking_jotaro_left.png')
     one_step_event = pg.USEREVENT + 1
     pg.time.set_timer(one_step_event, 0)
-
-    # Задаём способ разрезания листа на кадры.
-    # (столбцов, строк) --> (20, 1) --> 20 кадров:
-    cols, rows = (16, 1)
-
     # Задаём координаты отрисовки спрайта в игровом окне:
     x, y = (0, 0)
     # Создаём экземпляр анимированного спрайта:
