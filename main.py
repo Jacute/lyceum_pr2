@@ -40,17 +40,17 @@ class AnimaSprite(pg.sprite.Sprite):
 
     def go_right(self):
         global x
-        if walking:
+        if walking_jotaro:
+            pg.time.set_timer(one_step_event, 500)
             self.rect.move(self.rect.x + 30, self.rect.y)
             x += 30
-            pg.time.set_timer(one_step_event, 500)
 
     def go_left(self):
         global x
-        if walking:
+        if walking_jotaro:
+            pg.time.set_timer(one_step_event, 500)
             self.rect.move(self.rect.x - 30, self.rect.y)
             x -= 30
-            pg.time.set_timer(one_step_event, 500)
 
 
 if __name__ == '__main__':
@@ -60,10 +60,18 @@ if __name__ == '__main__':
     screen = pg.display.set_mode((size), pg.RESIZABLE)
     all_sprites = pg.sprite.Group()
     # Загружаем спрайты:
-    jotaro_afk = [load_image('jotaro_afk1.png'), load_image('jotaro_afk2.png'),
+    jotaro_afk_right_side = [load_image('jotaro_afk1.png'), load_image('jotaro_afk2.png'),
                   load_image('jotaro_afk3.png'), load_image('jotaro_afk4.png'),
                   load_image('jotaro_afk5.png'), load_image('jotaro_afk6.png'),
                   load_image('jotaro_afk7.png'), load_image('jotaro_afk8.png')]
+    jotaro_afk_left_side = [load_image('jotaro_afk1_other_side.png'),
+                            load_image('jotaro_afk2_other_side.png'),
+                            load_image('jotaro_afk3_other_side.png'),
+                            load_image('jotaro_afk4_other_side.png'),
+                            load_image('jotaro_afk5_other_side.png'),
+                            load_image('jotaro_afk6_other_side.png'),
+                            load_image('jotaro_afk7_other_side.png'),
+                            load_image('jotaro_afk8_other_side.png')]
     jotaro_walking_right1 = [load_image('jotaro_walking_right1.png'),
                             load_image('jotaro_walking_right2.png'),
                             load_image('jotaro_walking_right3.png'),
@@ -101,43 +109,51 @@ if __name__ == '__main__':
     # Задаём координаты отрисовки спрайта в игровом окне:
     x, y = (0, 480)
     # Создаём экземпляр анимированного спрайта:
-    sprite_jotaro = AnimaSprite(jotaro_afk, x, y)
+    sprite_jotaro = AnimaSprite(jotaro_afk_right_side, x, y)
     pg.key.set_repeat(20, 1)
     fps = 15
-    # count - переменная, которая считает, на какую ногу должен будет наступать герой
+    true_side = True
+    # count - переменная, которая считает, на какую ногу должен будет наступать персонаж
     # (0 - правая, 1 - левая)
     count = 0
     running = True
-    walking = False
+    walking_jotaro = False
     # Главный игровой цикл:
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_RIGHT and not walking and x + 107 <= width:
+                if event.key == pg.K_RIGHT and not walking_jotaro and x + 107 <= width:
                     sprite_jotaro.kill()
                     if count == 0:
                         sprite_walking_jotaro = AnimaSprite(jotaro_walking_right1, x, y)
                     elif count == 1:
                         sprite_walking_jotaro = AnimaSprite(jotaro_walking_right2, x, y)
-                    walking = True
+                    if not true_side:
+                        true_side = not true_side
+                    walking_jotaro = True
                     count = (count + 1) % 2
                     sprite_walking_jotaro.go_right()
-                elif event.key == pg.K_LEFT and not walking and x - 30 >= 0:
+                elif event.key == pg.K_LEFT and not walking_jotaro and x - 30 >= 0:
                     sprite_jotaro.kill()
                     if count == 0:
                         sprite_walking_jotaro = AnimaSprite(jotaro_walking_left1, x, y)
                     elif count == 1:
                         sprite_walking_jotaro = AnimaSprite(jotaro_walking_left2, x, y)
-                    walking = True
+                    if true_side:
+                        true_side = not true_side
+                    walking_jotaro = True
                     count = (count + 1) % 2
                     sprite_walking_jotaro.go_left()
             elif event.type == one_step_event:
                 sprite_walking_jotaro.kill()
                 pg.time.set_timer(one_step_event, 0)
-                sprite_jotaro = AnimaSprite(jotaro_afk, x, y)
-                walking = False
+                if true_side:
+                    sprite_jotaro = AnimaSprite(jotaro_afk_right_side, x, y)
+                elif not true_side:
+                    sprite_jotaro = AnimaSprite(jotaro_afk_left_side, x, y)
+                walking_jotaro = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
         all_sprites.update()
