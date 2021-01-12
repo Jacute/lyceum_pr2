@@ -54,7 +54,7 @@ class AnimaSprite(pg.sprite.Sprite):
 
     def jump(self):
         global y
-        if jumping_jotaro and not walking_jotaro:
+        if jumping_jotaro and not flag_walking_jotaro:
             pg.time.set_timer(jump_event, 800)
 
 
@@ -173,8 +173,8 @@ if __name__ == '__main__':
                     sprite_jumping_jotaro = AnimaSprite(sprite_jotaro_jumping, x, y)
                     sprite_jumping_jotaro.jump()
             elif event.type == one_step_event:
-                walking_jotaro.kill()
                 pg.time.set_timer(one_step_event, 0)
+                walking_jotaro.kill()
                 if true_side:
                     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
                 elif not true_side:
