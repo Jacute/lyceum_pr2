@@ -138,14 +138,14 @@ if __name__ == '__main__':
     # (0 - правая, 1 - левая)
     count = 0
     running = True
-    walking_jotaro, jumping_jotaro = False, False
+    flag_walking_jotaro, jumping_jotaro = False, False
     # Главный игровой цикл:
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_RIGHT and not walking_jotaro and x + 97 <= width:
+                if event.key == pg.K_RIGHT and not flag_walking_jotaro and x + 97 <= width:
                     sprite_jotaro.kill()
                     if count == 0:
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_right1, x, y)
@@ -153,10 +153,10 @@ if __name__ == '__main__':
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_right2, x, y)
                     if not true_side:
                         true_side = not true_side
-                    walking_jotaro = True
+                    flag_walking_jotaro = True
                     count = (count + 1) % 2
                     walking_jotaro.go_right()
-                elif event.key == pg.K_LEFT and not walking_jotaro and x - 20 >= 0:
+                elif event.key == pg.K_LEFT and not flag_walking_jotaro and x - 20 >= 0:
                     sprite_jotaro.kill()
                     if count == 0:
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_left1, x, y)
@@ -164,10 +164,10 @@ if __name__ == '__main__':
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_left2, x, y)
                     if true_side:
                         true_side = not true_side
-                    walking_jotaro = True
+                    flag_walking_jotaro = True
                     count = (count + 1) % 2
                     walking_jotaro.go_left()
-                elif event.key == pg.K_UP and not walking_jotaro and not jumping_jotaro:
+                elif event.key == pg.K_UP and not flag_walking_jotaro and not jumping_jotaro:
                     sprite_jotaro.kill()
                     jumping_jotaro = True
                     sprite_jumping_jotaro = AnimaSprite(sprite_jotaro_jumping, x, y)
@@ -179,7 +179,7 @@ if __name__ == '__main__':
                     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
                 elif not true_side:
                     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_left_side, x, y)
-                walking_jotaro = False
+                flag_walking_jotaro = False
             elif event.type == jump_event:
                 jump_event.kill()
                 pg.time.set_timer(jump_event, 0)
