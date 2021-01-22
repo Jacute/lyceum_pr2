@@ -40,22 +40,20 @@ class AnimaSprite(pg.sprite.Sprite):
 
     def go_right(self):
         global x
-        if walking_jotaro:
+        if flag_walking_jotaro and not flag_jumping_jotaro:
             pg.time.set_timer(one_step_event, 500)
             self.rect.move(self.rect.x + 30, self.rect.y)
             x += 20
 
     def go_left(self):
         global x
-        if walking_jotaro:
+        if flag_walking_jotaro and not flag_jumping_jotaro:
             pg.time.set_timer(one_step_event, 500)
             self.rect.move(self.rect.x - 30, self.rect.y)
             x -= 20
 
     def jump(self):
-        global y
-        if jumping_jotaro and not flag_walking_jotaro:
-            pg.time.set_timer(jump_event, 800)
+        pg.time.set_timer(jump_event, 1711)
 
 
 class Hp_and_Mana(pg.sprite.Sprite):
@@ -76,14 +74,6 @@ if __name__ == '__main__':
                   load_image('jotaro_afk3.png'), load_image('jotaro_afk4.png'),
                   load_image('jotaro_afk5.png'), load_image('jotaro_afk6.png'),
                   load_image('jotaro_afk7.png'), load_image('jotaro_afk8.png')]
-    sprite_jotaro_afk_left_side = [load_image('jotaro_afk1_other_side.png'),
-                            load_image('jotaro_afk2_other_side.png'),
-                            load_image('jotaro_afk3_other_side.png'),
-                            load_image('jotaro_afk4_other_side.png'),
-                            load_image('jotaro_afk5_other_side.png'),
-                            load_image('jotaro_afk6_other_side.png'),
-                            load_image('jotaro_afk7_other_side.png'),
-                            load_image('jotaro_afk8_other_side.png')]
     sprite_jotaro_walking_right1 = [load_image('jotaro_walking_right1.png'),
                             load_image('jotaro_walking_right2.png'),
                             load_image('jotaro_walking_right3.png'),
@@ -100,94 +90,92 @@ if __name__ == '__main__':
                             load_image('jotaro_walking_right14.png'),
                             load_image('jotaro_walking_right15.png'),
                             load_image('jotaro_walking_right16.png')]
-    sprite_jotaro_walking_left1 = [load_image('jotaro_walking_left1.png'),
-                            load_image('jotaro_walking_left2.png'),
-                            load_image('jotaro_walking_left3.png'),
-                            load_image('jotaro_walking_left4.png'),
-                            load_image('jotaro_walking_left5.png'),
-                            load_image('jotaro_walking_left6.png'),
+    sprite_jotaro_walking_left1 = [load_image('jotaro_walking_left8.png'),
                             load_image('jotaro_walking_left7.png'),
-                            load_image('jotaro_walking_left8.png')]
-    sprite_jotaro_walking_left2 = [load_image('jotaro_walking_left9.png'),
-                            load_image('jotaro_walking_left10.png'),
-                            load_image('jotaro_walking_left11.png'),
-                            load_image('jotaro_walking_left12.png'),
-                            load_image('jotaro_walking_left13.png'),
-                            load_image('jotaro_walking_left14.png'),
+                            load_image('jotaro_walking_left6.png'),
+                            load_image('jotaro_walking_left5.png'),
+                            load_image('jotaro_walking_left4.png'),
+                            load_image('jotaro_walking_left3.png'),
+                            load_image('jotaro_walking_left2.png'),
+                            load_image('jotaro_walking_left1.png')]
+    sprite_jotaro_walking_left2 = [load_image('jotaro_walking_left16.png'),
                             load_image('jotaro_walking_left15.png'),
-                            load_image('jotaro_walking_left16.png')]
+                            load_image('jotaro_walking_left14.png'),
+                            load_image('jotaro_walking_left13.png'),
+                            load_image('jotaro_walking_left12.png'),
+                            load_image('jotaro_walking_left11.png'),
+                            load_image('jotaro_walking_left10.png'),
+                            load_image('jotaro_walking_left9.png')]
     sprite_jotaro_jumping = [load_image('jotaro_jump1.png'), load_image('jotaro_jump2.png'),
                       load_image('jotaro_jump3.png'), load_image('jotaro_jump4.png'),
                       load_image('jotaro_jump5.png'), load_image('jotaro_jump6.png'),
                       load_image('jotaro_jump7.png'), load_image('jotaro_jump8.png'),
-                      load_image('jotaro_jump9.png')]
+                      load_image('jotaro_jump9.png'), load_image('jotaro_jump10.png'),
+                      load_image('jotaro_jump11.png'), load_image('jotaro_jump12.png'),
+                      load_image('jotaro_jump13.png'), load_image('jotaro_jump14.png'),
+                      load_image('jotaro_jump15.png'), load_image('jotaro_jump16.png'),
+                      load_image('jotaro_jump17.png'), load_image('jotaro_jump18.png'),
+                      load_image('jotaro_jump19.png'), load_image('jotaro_jump20.png'),
+                      load_image('jotaro_jump21.png'), load_image('jotaro_jump22.png')]
     sprite_hp_and_mana_jotaro = load_image("hp_and_mana_jotaro.jpg")
     sprite_hp_and_mana_dio = load_image("hp_and_mana_dio.jpg")
     hp_and_mana_jotaro = Hp_and_Mana(sprite_hp_and_mana_jotaro, 0, 0)
     hp_and_mana_dio = Hp_and_Mana(sprite_hp_and_mana_dio, 499, 0)
-    one_step_event, jump_event = pg.USEREVENT + 1, pg.USEREVENT + 1
+    one_step_event = pg.USEREVENT + 1
+    jump_event = pg.USEREVENT + 2
     # Задаём координаты отрисовки спрайта в игровом окне:
     x, y = (0, 380)
     hp_jotaro, mana_jotaro = 100, 45
     # Создаём экземпляр анимированного спрайта:
     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
-    pg.key.set_repeat(20, 1)
-    fps = 12
-    true_side = True
+    pg.key.set_repeat(2, 1)
+    fps = 13
     # count - переменная, которая считает, на какую ногу должен будет наступать персонаж
     # (0 - правая, 1 - левая)
     count = 0
     running = True
-    flag_walking_jotaro, jumping_jotaro = False, False
+    flag_walking_jotaro, flag_jumping_jotaro = False, False
     # Главный игровой цикл:
     while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_RIGHT and not flag_walking_jotaro and x + 97 <= width:
+                if event.key == pg.K_d and not flag_walking_jotaro and x + 97 <= width\
+                        and not flag_jumping_jotaro:
                     sprite_jotaro.kill()
                     if count == 0:
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_right1, x, y)
                     elif count == 1:
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_right2, x, y)
-                    if not true_side:
-                        true_side = not true_side
                     flag_walking_jotaro = True
                     count = (count + 1) % 2
                     walking_jotaro.go_right()
-                elif event.key == pg.K_LEFT and not flag_walking_jotaro and x - 20 >= 0:
+                elif event.key == pg.K_a and not flag_walking_jotaro and x - 20 >= 0\
+                        and not flag_jumping_jotaro:
                     sprite_jotaro.kill()
                     if count == 0:
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_left1, x, y)
                     elif count == 1:
                         walking_jotaro = AnimaSprite(sprite_jotaro_walking_left2, x, y)
-                    if true_side:
-                        true_side = not true_side
                     flag_walking_jotaro = True
                     count = (count + 1) % 2
                     walking_jotaro.go_left()
-                elif event.key == pg.K_UP and not flag_walking_jotaro and not jumping_jotaro:
+                elif event.key == pg.K_w and not flag_walking_jotaro and not flag_jumping_jotaro:
                     sprite_jotaro.kill()
-                    jumping_jotaro = True
-                    sprite_jumping_jotaro = AnimaSprite(sprite_jotaro_jumping, x, y)
-                    sprite_jumping_jotaro.jump()
+                    flag_jumping_jotaro = True
+                    jumping_jotaro = AnimaSprite(sprite_jotaro_jumping, x, y)
+                    jumping_jotaro.jump()
             elif event.type == one_step_event:
                 pg.time.set_timer(one_step_event, 0)
                 walking_jotaro.kill()
-                if true_side:
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
-                elif not true_side:
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_afk_left_side, x, y)
+                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
                 flag_walking_jotaro = False
             elif event.type == jump_event:
-                jump_event.kill()
                 pg.time.set_timer(jump_event, 0)
-                if true_side:
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
-                elif not true_side:
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_afk_left_side, x, y)
-                jumping_jotaro = False
+                jumping_jotaro.kill()
+                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
+                flag_jumping_jotaro = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
         all_sprites.update()
