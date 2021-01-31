@@ -57,8 +57,7 @@ class AnimaSprite(pg.sprite.Sprite):
         pg.time.set_timer(jump_event, 1711)
 
     def start_sitting(self):
-        if not flag_jumping_jotaro and flag_sitting_jotaro:
-            pg.time.set_timer(start_sitting_event, 300)
+        pg.time.set_timer(start_sitting_event, 200)
 
     def stand_up(self):
         pg.time.set_timer(stand_up_event, 777)
@@ -146,7 +145,7 @@ if __name__ == '__main__':
     hp_jotaro, mana_jotaro = 100, 45
     # Создаём экземпляр анимированного спрайта:
     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
-    pg.key.set_repeat(1, 1)
+    pg.key.set_repeat(1, 20)
     fps = 13
     # count - переменная, которая считает, на какую ногу должен будет наступать персонаж
     # (0 - правая, 1 - левая)
@@ -190,7 +189,7 @@ if __name__ == '__main__':
                     start_sitting_jotaro = AnimaSprite(sprite_jotaro_start_sitting, x, y)
                     start_sitting_jotaro.start_sitting()
             elif event.type == pg.KEYUP:
-                if event.key == pg.K_s:
+                if event.key == pg.K_s and not flag_walking_jotaro and flag_sitting_jotaro and not flag_jumping_jotaro:
                     sitting_jotaro.kill()
                     end_sitting_jotaro = AnimaSprite(sprite_jotaro_end_sitting, x, y)
                     end_sitting_jotaro.stand_up()
