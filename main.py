@@ -116,8 +116,8 @@ if __name__ == '__main__':
         jotaro_attack_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3,\
         pg.USEREVENT + 4, pg.USEREVENT + 5
     dio_one_step_event, dio_jump_event, dio_start_sitting_event, dio_stand_up_event,\
-        dio_attack_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3,\
-        pg.USEREVENT + 4, pg.USEREVENT + 5
+        dio_attack_event = pg.USEREVENT + 6, pg.USEREVENT + 7, pg.USEREVENT + 8,\
+        pg.USEREVENT + 9, pg.USEREVENT + 10
     # Задаём координаты отрисовки спрайтов в игровом окне:
     x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 735, 380)
     # Задаём кол-во хп и маны у персонажей
@@ -129,7 +129,7 @@ if __name__ == '__main__':
         False, False, False, False
     # Создаём экземпляры анимированных спрайтов:
     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, 'jotaro', x_jotaro, y_jotaro)
-    sprite_dio = AnimaSprite(sprite_dio_afk_right_side, 'dio', x_dio, y_dio)
+    sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
     # Задаём повтор клавиш
     pg.key.set_repeat(1, 10)
     # Задаём fps
@@ -147,6 +147,7 @@ if __name__ == '__main__':
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
+                # Обработка клавиш для Джотаро
                 if event.key == pg.K_d and x_jotaro + 97 <= width and not any(flags_jotaro):
                     sprite_jotaro.kill()
                     if count_jotaro == 0:
@@ -180,7 +181,8 @@ if __name__ == '__main__':
                     flag_attacking_jotaro = True
                     sprite_jotaro = AnimaSprite(sprite_jotaro_light_attack, 'jotaro', x_jotaro, y_jotaro)
                     sprite_jotaro.attack()
-                elif event.key == pg.K_l and not flag_walking_jotaro and not flag_jumping_jotaro and not flag_attacking_jotaro and flag_sitting_jotaro:
+                elif event.key == pg.K_l and not flag_walking_jotaro and not flag_jumping_jotaro\
+                        and not flag_attacking_jotaro and flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = AnimaSprite(sprite_jotaro_sitting_light_attack, 'jotaro', x_jotaro, y_jotaro)
@@ -195,15 +197,24 @@ if __name__ == '__main__':
                     flag_walking_dio = True
                     count_dio = (count_dio + 1) % 2
                     sprite_dio.go_left()
+                elif event.key == pg.K_RIGHT and not any(flags_dio) and x_dio + 84 <= width:
+                    sprite_dio.kill()
+                    if count_dio == 0:
+                        sprite_dio = AnimaSprite(sprite_dio_walking_right1, 'dio', x_dio, y_dio)
+                    elif count_dio == 1:
+                        sprite_dio = AnimaSprite(sprite_dio_walking_right2, 'dio', x_dio, y_dio)
+                    flag_walking_dio = True
+                    count_dio = (count_dio + 1) % 2
+                    sprite_dio.go_right()
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_s and flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     sprite_jotaro = AnimaSprite(sprite_jotaro_end_sitting, 'jotaro', x_jotaro, y_jotaro)
                     sprite_jotaro.stand_up()
+            # Добавление event'ов для проигрывания анимаций Джотаро
             elif event.type == jotaro_one_step_event:
                 sprite_jotaro.kill()
                 pg.time.set_timer(jotaro_one_step_event, 0)
-                sprite_jotaro.kill()
                 sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, 'jotaro', x_jotaro, y_jotaro)
                 flag_walking_jotaro = False
             elif event.type == jotaro_jump_event:
@@ -225,10 +236,17 @@ if __name__ == '__main__':
                 pg.time.set_timer(jotaro_attack_event, 0)
                 sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, 'jotaro', x_jotaro, y_jotaro)
                 flag_attacking_jotaro = False
+            # Добавление event'ов для проигрывания анимаций Дио
+            elif event.type == dio_one_step_event:
+                sprite_dio.kill()
+                pg.time.set_timer(dio_one_step_event, 0)
+                sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
+                flag_walking_dio = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
         all_sprites.update()
         hp_and_mana_sprites.draw(screen)
+        hp_and_mana_dio.update()
         # Отрисовка здоровья и маны
         pg.draw.rect(screen, pg.Color('red'), (0, 21, hp_jotaro * 3, 5))
         pg.draw.rect(screen, pg.Color('blue'), (0, 26, mana_jotaro * 3, 5))

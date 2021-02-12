@@ -69,7 +69,7 @@ sprite_jotaro_sitting_light_attack = [load_image('jotaro_sitting_light_attack8.p
                                       load_image('jotaro_sitting_light_attack3.png'),
                                       load_image('jotaro_sitting_light_attack2.png'),
                                       load_image('jotaro_sitting_light_attack1.png')]
-sprite_dio_afk_right_side = [load_image('dio_afk1.png'), load_image('dio_afk2.png'),
+sprite_dio_afk_left_side = [load_image('dio_afk1.png'), load_image('dio_afk2.png'),
                              load_image('dio_afk3.png'), load_image('dio_afk4.png'),
                              load_image('dio_afk5.png'), load_image('dio_afk6.png'),
                              load_image('dio_afk7.png'), load_image('dio_afk8.png')]
@@ -89,21 +89,21 @@ sprite_dio_walking_right2 = [load_image('dio_walking_right9.png'),
                                 load_image('dio_walking_right14.png'),
                                 load_image('dio_walking_right15.png'),
                                 load_image('dio_walking_right16.png')]
-sprite_dio_walking_left1 = [load_image('dio_walking_left8.png'),
-                               load_image('dio_walking_left7.png'),
-                               load_image('dio_walking_left6.png'),
-                               load_image('dio_walking_left5.png'),
-                               load_image('dio_walking_left4.png'),
-                               load_image('dio_walking_left3.png'),
+sprite_dio_walking_left1 = [load_image('dio_walking_left1.png'),
                                load_image('dio_walking_left2.png'),
-                               load_image('dio_walking_left1.png')]
-sprite_dio_walking_left2 = [load_image('dio_walking_left16.png'),
-                               load_image('dio_walking_left15.png'),
-                               load_image('dio_walking_left14.png'),
-                               load_image('dio_walking_left13.png'),
-                               load_image('dio_walking_left12.png'),
-                               load_image('dio_walking_left11.png'),
+                               load_image('dio_walking_left3.png'),
+                               load_image('dio_walking_left4.png'),
+                               load_image('dio_walking_left5.png'),
+                               load_image('dio_walking_left6.png'),
+                               load_image('dio_walking_left7.png'),
+                               load_image('dio_walking_left8.png')]
+sprite_dio_walking_left2 = [load_image('dio_walking_left9.png'),
                                load_image('dio_walking_left10.png'),
-                               load_image('dio_walking_left9.png')]
+                               load_image('dio_walking_left11.png'),
+                               load_image('dio_walking_left12.png'),
+                               load_image('dio_walking_left13.png'),
+                               load_image('dio_walking_left14.png'),
+                               load_image('dio_walking_left15.png'),
+                               load_image('dio_walking_left16.png')]
 sprite_hp_and_mana_jotaro = load_image("hp_and_mana_jotaro.png")
 sprite_hp_and_mana_dio = load_image("hp_and_mana_dio.png")
