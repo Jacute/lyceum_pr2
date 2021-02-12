@@ -148,6 +148,10 @@ if __name__ == '__main__':
                                           load_image('jotaro_sitting_light_attack3.png'),
                                           load_image('jotaro_sitting_light_attack2.png'),
                                           load_image('jotaro_sitting_light_attack1.png')]
+    sprite_dio_afk_right_side = [load_image('dio_afk1.png'), load_image('dio_afk2.png'),
+                                    load_image('dio_afk3.png'), load_image('dio_afk4.png'),
+                                    load_image('dio_afk5.png'), load_image('dio_afk6.png'),
+                                    load_image('dio_afk7.png'), load_image('dio_afk8.png')]
     sprite_hp_and_mana_jotaro = load_image("hp_and_mana_jotaro.png")
     sprite_hp_and_mana_dio = load_image("hp_and_mana_dio.png")
     hp_and_mana_jotaro = Hp_and_Mana(sprite_hp_and_mana_jotaro, 0, 0)
@@ -158,10 +162,11 @@ if __name__ == '__main__':
     stand_up_event = pg.USEREVENT + 4
     attack_event = pg.USEREVENT + 5
     # Задаём координаты отрисовки спрайта в игровом окне:
-    x, y = (0, 380)
+    x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 735, 380)
     hp_jotaro, mana_jotaro = 100, 45
     # Создаём экземпляр анимированного спрайта:
-    sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
+    sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
+    sprite_dio = AnimaSprite(sprite_dio_afk_right_side, x_dio, y_dio)
     pg.key.set_repeat(1, 10)
     fps = 13
     # count - переменная, которая считает, на какую ногу должен будет наступать персонаж
@@ -175,75 +180,75 @@ if __name__ == '__main__':
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_d and not flag_walking_jotaro and x + 97 <= width\
+                if event.key == pg.K_d and not flag_walking_jotaro and x_jotaro + 97 <= width\
                         and not flag_jumping_jotaro and not flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     if count == 0:
-                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_right1, x, y)
+                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_right1, x_jotaro, y_jotaro)
                     elif count == 1:
-                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_right2, x, y)
+                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_right2, x_jotaro, y_jotaro)
                     flag_walking_jotaro = True
                     count = (count + 1) % 2
                     sprite_jotaro.go_right()
-                elif event.key == pg.K_a and not flag_walking_jotaro and x - 20 >= 0\
+                elif event.key == pg.K_a and not flag_walking_jotaro and x_jotaro - 20 >= 0\
                         and not flag_jumping_jotaro and not flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     if count == 0:
-                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_left1, x, y)
+                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_left1, x_jotaro, y_jotaro)
                     elif count == 1:
-                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_left2, x, y)
+                        sprite_jotaro = AnimaSprite(sprite_jotaro_walking_left2, x_jotaro, y_jotaro)
                     flag_walking_jotaro = True
                     count = (count + 1) % 2
                     sprite_jotaro.go_left()
                 elif event.key == pg.K_w and not flag_walking_jotaro and not flag_jumping_jotaro and not flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     flag_jumping_jotaro = True
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_jumping, x, y)
+                    sprite_jotaro = AnimaSprite(sprite_jotaro_jumping, x_jotaro, y_jotaro)
                     sprite_jotaro.jump()
                 elif event.key == pg.K_s and not flag_walking_jotaro and not flag_jumping_jotaro and not flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     flag_sitting_jotaro = True
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_start_sitting, x, y)
+                    sprite_jotaro = AnimaSprite(sprite_jotaro_start_sitting, x_jotaro, y_jotaro)
                     sprite_jotaro.start_sitting()
                 elif event.key == pg.K_l and not flag_walking_jotaro and not flag_jumping_jotaro and not flag_sitting_jotaro and not flag_attacking_jotaro:
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_light_attack, x, y)
+                    sprite_jotaro = AnimaSprite(sprite_jotaro_light_attack, x_jotaro, y_jotaro)
                     sprite_jotaro.attack()
                 elif event.key == pg.K_l and not flag_walking_jotaro and not flag_jumping_jotaro and not flag_attacking_jotaro and flag_sitting_jotaro:
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_sitting_light_attack, x, y)
+                    sprite_jotaro = AnimaSprite(sprite_jotaro_sitting_light_attack, x_jotaro, y_jotaro)
                     sprite_jotaro.attack()
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_s and flag_sitting_jotaro:
                     sprite_jotaro.kill()
-                    sprite_jotaro = AnimaSprite(sprite_jotaro_end_sitting, x, y)
+                    sprite_jotaro = AnimaSprite(sprite_jotaro_end_sitting, x_jotaro, y_jotaro)
                     sprite_jotaro.stand_up()
             elif event.type == one_step_event:
                 sprite_jotaro.kill()
                 pg.time.set_timer(one_step_event, 0)
                 sprite_jotaro.kill()
-                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
+                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
                 flag_walking_jotaro = False
             elif event.type == jump_event:
                 sprite_jotaro.kill()
                 pg.time.set_timer(jump_event, 0)
-                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
+                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
                 flag_jumping_jotaro = False
             elif event.type == start_sitting_event:
                 sprite_jotaro.kill()
                 pg.time.set_timer(start_sitting_event, 0)
-                sprite_jotaro = AnimaSprite(sprite_jotaro_sitting, x, y)
+                sprite_jotaro = AnimaSprite(sprite_jotaro_sitting, x_jotaro, y_jotaro)
             elif event.type == stand_up_event:
                 sprite_jotaro.kill()
                 pg.time.set_timer(stand_up_event, 0)
-                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
+                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
                 flag_sitting_jotaro = False
             elif event.type == attack_event:
                 sprite_jotaro.kill()
                 pg.time.set_timer(attack_event, 0)
-                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x, y)
+                sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
                 flag_attacking_jotaro = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
