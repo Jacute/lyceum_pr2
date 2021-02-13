@@ -44,24 +44,24 @@ class AnimaSprite(pg.sprite.Sprite):
     def go_right(self):
         if self.hero == 'jotaro':
             global x_jotaro
-            pg.time.set_timer(jotaro_one_step_event, 620)
+            pg.time.set_timer(jotaro_one_step_event, 630)
             self.rect.move(self.rect.x + 20, self.rect.y)
             x_jotaro += 20
         else:
             global x_dio
-            pg.time.set_timer(dio_one_step_event, 620)
+            pg.time.set_timer(dio_one_step_event, 630)
             self.rect.move(self.rect.x + 20, self.rect.y)
             x_dio += 20
 
     def go_left(self):
         if self.hero == 'jotaro':
             global x_jotaro
-            pg.time.set_timer(jotaro_one_step_event, 620)
+            pg.time.set_timer(jotaro_one_step_event, 630)
             self.rect.move(self.rect.x - 20, self.rect.y)
             x_jotaro -= 20
         else:
             global x_dio
-            pg.time.set_timer(dio_one_step_event, 620)
+            pg.time.set_timer(dio_one_step_event, 630)
             self.rect.move(self.rect.x - 20, self.rect.y)
             x_dio -= 20
 
@@ -119,7 +119,7 @@ if __name__ == '__main__':
         dio_attack_event = pg.USEREVENT + 6, pg.USEREVENT + 7, pg.USEREVENT + 8,\
         pg.USEREVENT + 9, pg.USEREVENT + 10
     # Задаём координаты отрисовки спрайтов в игровом окне:
-    x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 735, 380)
+    x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 735, 356)
     # Задаём кол-во хп и маны у персонажей
     hp_jotaro, mana_jotaro, hp_dio, mana_dio = 100, 45, 100, 45
     # Задаём флаги событий персонажей
@@ -254,6 +254,7 @@ if __name__ == '__main__':
         pg.draw.rect(screen, pg.Color('blue'), (0, 26, mana_jotaro * 3, 5))
         pg.draw.rect(screen, pg.Color('red'), (800 - hp_dio * 3, 21, 800, 5))
         pg.draw.rect(screen, pg.Color('blue'), (800 - mana_dio * 3, 26, 800, 5))
+        pg.draw.rect(screen, pg.Color('black'), (0, 530, 800, 1))
         pg.display.flip()
         time.Clock().tick(fps)
     pg.quit()
