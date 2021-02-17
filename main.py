@@ -83,12 +83,13 @@ class AnimaSprite(pg.sprite.Sprite):
         else:
             pg.time.set_timer(dio_stand_up_event, 235)
 
-    def attack(self):
-        # Все атаки должны быть в 8 спрайтов
+    def light_attack(self):
+        # Все лёгкие атаки Джотаро должны быть в 8 спрайтов
         if self.hero == 'jotaro':
-            pg.time.set_timer(jotaro_attack_event, 630)
+            pg.time.set_timer(jotaro_light_attack_event, 630)
+        # Все лёгкие атаки Дио должны быть в 5 спрайтов
         else:
-            pg.time.set_timer(dio_attack_event, 630)
+            pg.time.set_timer(dio_light_attack_event, 400)
 
     def block(self):
         if self.hero == 'jotaro':
@@ -125,13 +126,13 @@ if __name__ == '__main__':
     hp_and_mana_dio = Hp_and_Mana(sprite_hp_and_mana_dio, 499, 0)
     # Задаём event'ы для анимаций персонажейb
     jotaro_one_step_event, jotaro_jump_event, jotaro_start_sitting_event, jotaro_stand_up_event,\
-        jotaro_attack_event, jotaro_start_blocking_event, jotaro_end_blocking_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3,\
+        jotaro_light_attack_event, jotaro_start_blocking_event, jotaro_end_blocking_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3,\
         pg.USEREVENT + 4, pg.USEREVENT + 5, pg.USEREVENT + 6, pg.USEREVENT + 7
     dio_one_step_event, dio_jump_event, dio_start_sitting_event, dio_stand_up_event,\
-        dio_attack_event, dio_start_blocking_event, dio_end_blocking_event = pg.USEREVENT + 9, pg.USEREVENT + 10, pg.USEREVENT + 11,\
+        dio_light_attack_event, dio_start_blocking_event, dio_end_blocking_event = pg.USEREVENT + 9, pg.USEREVENT + 10, pg.USEREVENT + 11,\
         pg.USEREVENT + 12, pg.USEREVENT + 13, pg.USEREVENT + 14, pg.USEREVENT + 15
     # Задаём координаты отрисовки спрайтов в игровом окне:
-    x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 710, 356)
+    x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 660, 356)
     # Задаём кол-во хп и маны у персонажей
     hp_jotaro, mana_jotaro, hp_dio, mana_dio = 100, 30, 100, 30
     # Задаём флаги событий персонажей
@@ -192,14 +193,14 @@ if __name__ == '__main__':
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = AnimaSprite(sprite_jotaro_light_attack, 'jotaro', x_jotaro, y_jotaro)
-                    sprite_jotaro.attack()
+                    sprite_jotaro.light_attack()
                 elif keys[pg.K_l] and flag_sitting_jotaro and not flag_attacking_jotaro:
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = AnimaSprite(sprite_jotaro_sitting_light_attack, 'jotaro', x_jotaro, y_jotaro)
-                    sprite_jotaro.attack()
+                    sprite_jotaro.light_attack()
                 # Обработка клавиш для Дио
-                elif keys[pg.K_LEFT] and not any(flags_dio) and x_dio - 20 >= 0:
+                elif keys[pg.K_LEFT] and not any(flags_dio) and x_dio + 20 >= 0:
                     sprite_dio.kill()
                     if count_dio == 0:
                         sprite_dio = AnimaSprite(sprite_dio_walking_left1, 'dio', x_dio, y_dio)
@@ -208,7 +209,7 @@ if __name__ == '__main__':
                     flag_walking_dio = True
                     count_dio = (count_dio + 1) % 2
                     sprite_dio.go_left()
-                elif keys[pg.K_RIGHT] and not any(flags_dio) and x_dio + 84 <= width:
+                elif keys[pg.K_RIGHT] and not any(flags_dio) and x_dio + 150 <= width:
                     sprite_dio.kill()
                     if count_dio == 0:
                         sprite_dio = AnimaSprite(sprite_dio_walking_right1, 'dio', x_dio, y_dio)
@@ -227,6 +228,17 @@ if __name__ == '__main__':
                     flag_sitting_dio = True
                     sprite_dio = AnimaSprite(sprite_dio_start_sitting, 'dio', x_dio, y_dio)
                     sprite_dio.start_sitting()
+                elif keys[pg.K_KP7] and not any(flags_dio):
+                    sprite_dio.kill()
+                    flag_attacking_dio = True
+                    sprite_dio = AnimaSprite(sprite_dio_light_attack, 'dio', x_dio, y_dio)
+                    sprite_dio.light_attack()
+                elif keys[pg.K_KP7] and flag_sitting_dio and not flag_attacking_dio:
+                    sprite_dio.kill()
+                    flag_attacking_dio = True
+                    sprite_dio = AnimaSprite(sprite_dio_sitting_light_attack, 'dio', x_dio, y_dio)
+                    sprite_dio.light_attack()
+            # Обработка нажаний клавиш при отпускании
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_s and flag_sitting_jotaro:
                     sprite_jotaro.kill()
@@ -256,9 +268,9 @@ if __name__ == '__main__':
                 pg.time.set_timer(jotaro_stand_up_event, 0)
                 sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, 'jotaro', x_jotaro, y_jotaro)
                 flag_sitting_jotaro = False
-            elif event.type == jotaro_attack_event:
+            elif event.type == jotaro_light_attack_event:
                 sprite_jotaro.kill()
-                pg.time.set_timer(jotaro_attack_event, 0)
+                pg.time.set_timer(jotaro_light_attack_event, 0)
                 if flag_sitting_jotaro:
                     sprite_jotaro = AnimaSprite(sprite_jotaro_sitting, 'jotaro', x_jotaro, y_jotaro)
                 else:
@@ -284,6 +296,14 @@ if __name__ == '__main__':
                 pg.time.set_timer(dio_stand_up_event, 0)
                 sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
                 flag_sitting_dio = False
+            elif event.type == dio_light_attack_event:
+                sprite_dio.kill()
+                pg.time.set_timer(dio_light_attack_event, 0)
+                if flag_sitting_dio:
+                    sprite_dio = AnimaSprite(sprite_dio_sitting, 'dio', x_dio, y_dio)
+                else:
+                    sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
+                flag_attacking_dio = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
         all_sprites.update()
