@@ -90,12 +90,17 @@ class AnimaSprite(pg.sprite.Sprite):
             pg.time.set_timer(dio_stand_up_event, 235)
 
     def light_attack(self):
+        global x_dio, x_jotaro, dio_hp, jotaro_hp
         # Все лёгкие атаки Джотаро должны быть в 8 спрайтов
         if self.hero == 'jotaro':
             pg.time.set_timer(jotaro_light_attack_event, 630)
+            if x_jotaro == x_dio and not flag_sitting_dio and not flag_jumping_dio:
+                dio_hp -= 20
         # Все лёгкие атаки Дио должны быть в 5 спрайтов
         else:
             pg.time.set_timer(dio_light_attack_event, 400)
+            if x_jotaro == x_dio and not flag_sitting_jotaro and not flag_jumping_jotaro:
+                dio_hp -= 20
 
     def block(self):
         if self.hero == 'jotaro':
@@ -125,6 +130,9 @@ if __name__ == '__main__':
     size = width, height = 800, 600
     # Создаём окно
     screen = pg.display.set_mode((size))
+    # Задаём хп
+    jotaro_hp = 100
+    dio_hp = 100
     # Создаём группы спрайтов
     all_sprites, hp_and_mana_sprites = pg.sprite.Group(), pg.sprite.Group()
     # Задаём спрайты шкал хп и маны
@@ -162,6 +170,10 @@ if __name__ == '__main__':
         if x_jotaro < x_dio:
             flag_stop_jotaro = False
             flag_stop_dio = False
+        if dio_hp == 0:
+            print('выйграл джотаро')
+        if jotaro_hp == 0:
+            print('выйграл дио')
         for event in pg.event.get():
             keys = pg.key.get_pressed()
             flags_jotaro = {flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro}
