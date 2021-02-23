@@ -90,17 +90,23 @@ class AnimaSprite(pg.sprite.Sprite):
             pg.time.set_timer(dio_stand_up_event, 235)
 
     def light_attack(self):
-        global x_dio, x_jotaro, dio_hp, jotaro_hp
+        global x_dio, x_jotaro, dio_hp, jotaro_hp, flag_dio_taking_damage
         # Все лёгкие атаки Джотаро должны быть в 8 спрайтов
         if self.hero == 'jotaro':
             pg.time.set_timer(jotaro_light_attack_event, 630)
-            if x_jotaro == x_dio and not flag_sitting_dio and not flag_jumping_dio:
+            if x_jotaro == x_dio and not flag_jumping_dio and flag_sitting_dio:
                 dio_hp -= 20
+                pg.time.set_timer(dio_sitting_damage_event, 630)
+                flag_dio_taking_damage = True
+            elif x_jotaro == x_dio and not flag_jumping_dio:
+                dio_hp -= 20
+                pg.time.set_timer(dio_damage_event, 630)
+                flag_dio_taking_damage = True
         # Все лёгкие атаки Дио должны быть в 5 спрайтов
         else:
             pg.time.set_timer(dio_light_attack_event, 400)
             if x_jotaro == x_dio and not flag_sitting_jotaro and not flag_jumping_jotaro:
-                dio_hp -= 20
+                jotaro_hp -= 10
 
     def block(self):
         if self.hero == 'jotaro':
@@ -140,11 +146,13 @@ if __name__ == '__main__':
     hp_and_mana_dio = Hp_and_Mana(sprite_hp_and_mana_dio, 499, 0)
     # Задаём event'ы для анимаций персонажейb
     jotaro_one_step_event, jotaro_jump_event, jotaro_start_sitting_event, jotaro_stand_up_event,\
-        jotaro_light_attack_event, jotaro_start_blocking_event, jotaro_end_blocking_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3,\
-        pg.USEREVENT + 4, pg.USEREVENT + 5, pg.USEREVENT + 6, pg.USEREVENT + 7
+        jotaro_light_attack_event, jotaro_start_blocking_event, jotaro_end_blocking_event, jotaro_sitting_damage_event,\
+    jotaro_damage_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3,\
+        pg.USEREVENT + 4, pg.USEREVENT + 5, pg.USEREVENT + 6, pg.USEREVENT + 7, pg.USEREVENT + 8, pg.USEREVENT + 9
     dio_one_step_event, dio_jump_event, dio_start_sitting_event, dio_stand_up_event,\
-        dio_light_attack_event, dio_start_blocking_event, dio_end_blocking_event = pg.USEREVENT + 9, pg.USEREVENT + 10, pg.USEREVENT + 11,\
-        pg.USEREVENT + 12, pg.USEREVENT + 13, pg.USEREVENT + 14, pg.USEREVENT + 15
+        dio_light_attack_event, dio_start_blocking_event, dio_end_blocking_event,\
+    dio_sitting_damage_event, dio_damage_event  = pg.USEREVENT + 10, pg.USEREVENT + 11, pg.USEREVENT + 12,\
+        pg.USEREVENT + 13, pg.USEREVENT + 14, pg.USEREVENT + 15, pg.USEREVENT + 16, pg.USEREVENT + 17, pg.USEREVENT + 18
     # Задаём координаты отрисовки спрайтов в игровом окне:
     x_jotaro, y_jotaro, x_dio, y_dio = (0, 380, 660, 356)
     # Задаём кол-во хп и маны у персонажей
@@ -152,8 +160,8 @@ if __name__ == '__main__':
     # Задаём флаги событий персонажей
     flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro, flag_blocking_jotaro, flag_stop_jotaro = \
         False, False, False, False, False, False
-    flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio, flag_stop_dio = \
-        False, False, False, False, False, False
+    flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio, flag_stop_dio, flag_dio_taking_damage = \
+        False, False, False, False, False, False, False
     # Создаём экземпляры анимированных спрайтов:
     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, 'jotaro', x_jotaro, y_jotaro)
     sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
@@ -325,6 +333,16 @@ if __name__ == '__main__':
                 else:
                     sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
                 flag_attacking_dio = False
+            elif event.type == dio_sitting_damage_event and flag_dio_taking_damage:
+                sprite_dio.kill()
+                pg.time.set_timer(dio_sitting_damage_event, 0)
+                sprite_dio = AnimaSprite(sprite_dio_siting_taking_damage, 'dio', x_dio, y_dio)
+                flag_dio_taking_damage = False
+            elif event.type == dio_damage_event and flag_dio_taking_damage:
+                sprite_dio.kill()
+                pg.time.set_timer(dio_damage_event, 0)
+                sprite_dio = AnimaSprite(sprite_dio_taking_damage, 'dio', x_dio, y_dio)
+                flag_dio_taking_damage = False
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
         all_sprites.update()
