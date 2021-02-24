@@ -42,28 +42,34 @@ class AnimaSprite(pg.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
     def go_right(self):
+        global x_dio, x_jotaro, flag_stop_jotaro
         if self.hero == 'jotaro':
-            global x_jotaro
-            pg.time.set_timer(jotaro_one_step_event, 630)
-            self.rect.move(self.rect.x + 20, self.rect.y)
-            x_jotaro += 20
+            if x_dio > x_jotaro:
+                pg.time.set_timer(jotaro_one_step_event, 630)
+                self.rect.move(self.rect.x + 20, self.rect.y)
+                x_jotaro += 20
+            else:
+                pg.time.set_timer(jotaro_one_step_event, 630)
+                flag_stop_jotaro = True
         else:
-            global x_dio
             pg.time.set_timer(dio_one_step_event, 630)
             self.rect.move(self.rect.x + 20, self.rect.y)
             x_dio += 20
 
     def go_left(self):
+        global x_dio, x_jotaro, flag_stop_dio
         if self.hero == 'jotaro':
-            global x_jotaro
             pg.time.set_timer(jotaro_one_step_event, 630)
             self.rect.move(self.rect.x - 20, self.rect.y)
             x_jotaro -= 20
         else:
-            global x_dio
-            pg.time.set_timer(dio_one_step_event, 630)
-            self.rect.move(self.rect.x - 20, self.rect.y)
-            x_dio -= 20
+            if x_jotaro < x_dio:
+                pg.time.set_timer(dio_one_step_event, 630)
+                self.rect.move(self.rect.x - 20, self.rect.y)
+                x_dio -= 20
+            else:
+                pg.time.set_timer(dio_one_step_event, 630)
+                flag_stop_dio = True
 
     def jump(self):
         if self.hero == 'jotaro':
@@ -136,10 +142,10 @@ if __name__ == '__main__':
     # Задаём кол-во хп и маны у персонажей
     hp_jotaro, mana_jotaro, hp_dio, mana_dio = 100, 30, 100, 30
     # Задаём флаги событий персонажей
-    flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro, flag_blocking_jotaro = \
-        False, False, False, False, False
-    flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio = \
-        False, False, False, False, False
+    flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro, flag_blocking_jotaro, flag_stop_jotaro = \
+        False, False, False, False, False, False
+    flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio, flag_stop_dio = \
+        False, False, False, False, False, False
     # Создаём экземпляры анимированных спрайтов:
     sprite_jotaro = AnimaSprite(sprite_jotaro_afk_right_side, 'jotaro', x_jotaro, y_jotaro)
     sprite_dio = AnimaSprite(sprite_dio_afk_left_side, 'dio', x_dio, y_dio)
@@ -152,7 +158,15 @@ if __name__ == '__main__':
     count_jotaro, count_dio = 0, 0
     running = True
     # Главный игровой цикл:
+    pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
+    pg.mixer.music.set_volume(0.75)
+    pg.mixer.music.play(-1)
     while running:
+        if x_jotaro < x_dio:
+            flag_stop_jotaro = False
+            flag_stop_dio = False
+        elif hp_jotaro <= 0 or hp_dio <= 0:
+            end = True
         for event in pg.event.get():
             keys = pg.key.get_pressed()
             flags_jotaro = {flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro}
@@ -161,7 +175,7 @@ if __name__ == '__main__':
                 running = False
             elif event.type == pg.KEYDOWN:
                 # Обработка клавиш для Джотаро
-                if keys[pg.K_d] and x_jotaro + 97 <= width and not any(flags_jotaro):
+                if keys[pg.K_d] and x_jotaro + 97 <= width and not any(flags_jotaro) and flag_stop_jotaro == False:
                     sprite_jotaro.kill()
                     if count_jotaro == 0:
                         sprite_jotaro = AnimaSprite(sprite_jotaro_walking_right1, 'jotaro', x_jotaro, y_jotaro)
@@ -200,7 +214,7 @@ if __name__ == '__main__':
                     sprite_jotaro = AnimaSprite(sprite_jotaro_sitting_light_attack, 'jotaro', x_jotaro, y_jotaro)
                     sprite_jotaro.light_attack()
                 # Обработка клавиш для Дио
-                elif keys[pg.K_LEFT] and not any(flags_dio) and x_dio + 20 >= 0:
+                elif keys[pg.K_LEFT] and not any(flags_dio) and x_dio + 20 >= 0 and flag_stop_dio == False:
                     sprite_dio.kill()
                     if count_dio == 0:
                         sprite_dio = AnimaSprite(sprite_dio_walking_left1, 'dio', x_dio, y_dio)
