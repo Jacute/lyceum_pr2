@@ -40,6 +40,7 @@ class Dio(pg.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
         # Помещаем прямоугольник с кадром в координаты (x, y):
         self.rect = self.image.get_rect().move(x, y)
+        self.mask = pg.mask.from_surface(self.image)
 
     def update(self):
         """Смена кадра спрайта"""
@@ -138,10 +139,6 @@ class Jotaro(pg.sprite.Sprite):
 if __name__ == '__main__':
     # Инициализируем pygame
     pg.init()
-    # Добавляем фоновую музыку
-    pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
-    pg.mixer.music.set_volume(0.75)
-    pg.mixer.music.play(-1)
     pg.display.set_caption('Jotaro VS Dio')
     # Задаём размер окна
     size = width, height = 800, 600
@@ -165,7 +162,7 @@ if __name__ == '__main__':
     sprite_jotaro = Jotaro(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
     sprite_dio = Dio(sprite_dio_afk_left_side, x_dio, y_dio)
     # Задаём повтор клавиш
-    pg.key.set_repeat(1, 10)
+    pg.key.set_repeat(1, 20)
     # Задаём fps
     fps = 13
     # count - переменная, которая считает, на какую ногу должен будет наступать персонаж
