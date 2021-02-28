@@ -62,6 +62,8 @@ class Dio(pg.sprite.Sprite):
             pg.time.set_timer(self.one_step_event, 630)
             self.rect.move(self.rect.x - 20, self.rect.y)
             x_dio -= 20
+        else:
+            pg.time.set_timer(self.one_step_event, 630)
 
     def jump(self):
         pg.time.set_timer(self.jump_event, 930)
@@ -111,6 +113,8 @@ class Jotaro(pg.sprite.Sprite):
             pg.time.set_timer(self.one_step_event, 630)
             self.rect.move(self.rect.x + 20, self.rect.y)
             x_jotaro += 20
+        else:
+            pg.time.set_timer(self.one_step_event, 630)
 
     def go_left(self):
         global x_jotaro
