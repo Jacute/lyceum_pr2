@@ -157,6 +157,9 @@ class Jotaro(pg.sprite.Sprite):
 if __name__ == '__main__':
     # Инициализируем pygame
     pg.init()
+    pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
+    pg.mixer.music.set_volume(0.75)
+    pg.mixer.music.play(-1)
     pg.display.set_caption('Jotaro VS Dio')
     # Задаём размер окна
     size = width, height = 800, 600
