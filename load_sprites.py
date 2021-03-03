@@ -126,8 +126,22 @@ sprite_dio_end_sitting = [load_image('dio_sit5.png'), load_image('dio_sit6.png')
 sprite_dio_light_attack = [load_image('dio_light_attack1.png'), load_image('dio_light_attack2.png'),
                            load_image('dio_light_attack3.png'), load_image('dio_light_attack4.png'),
                            load_image('dio_light_attack5.png')]
-sprite_dio_sitting_light_attack = [load_image('dio_sitting_light_attack1.png'), load_image('dio_sitting_light_attack2.png'),
-                                   load_image('dio_sitting_light_attack3.png'), load_image('dio_sitting_light_attack4.png'),
+sprite_dio_sitting_light_attack = [load_image('dio_sitting_light_attack1.png'),
+                                   load_image('dio_sitting_light_attack2.png'),
+                                   load_image('dio_sitting_light_attack3.png'),
+                                   load_image('dio_sitting_light_attack4.png'),
                                    load_image('dio_sitting_light_attack5.png')]
 sprite_hp_and_mana_jotaro = load_image("hp_and_mana_jotaro.png")
 sprite_hp_and_mana_dio = load_image("hp_and_mana_dio.png")
+sprite_dio_light_attack_taking_damage = [load_image('dio_light_attack_taking_damage1.png'),
+                                         load_image('dio_light_attack_taking_damage2.png'),
+                                         load_image('dio_light_attack_taking_damage3.png')]
+sprite_jotaro_light_attack_taking_damage = [load_image('jotaro_light_attack_taking_damage1.png'),
+                                            load_image('jotaro_light_attack_taking_damage2.png'),
+                                            load_image('jotaro_light_attack_taking_damage3.png')]
+sprite_jotaro_sitting_light_attack_taking_damage = [load_image('jotaro_sitting_light_attack_taking_damage1.png'),
+                                                    load_image('jotaro_sitting_light_attack_taking_damage2.png'),
+                                                    load_image('jotaro_sitting_light_attack_taking_damage3.png')]
+sprite_dio_sitting_light_attack_taking_damage = [load_image('dio_sitting_light_attack_taking_damage1.png'),
+                                                 load_image('dio_sitting_light_attack_taking_damage2.png'),
+                                                 load_image('dio_sitting_light_attack_taking_damage3.png')]

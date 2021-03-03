@@ -26,9 +26,10 @@ class Dio(pg.sprite.Sprite):
     def __init__(self, sheet, x, y):
         super().__init__(all_sprites)
         ''' Ивенты Дио '''
-        self.one_step_event, self.jump_event, self.start_sitting_event, self.stand_up_event, \
-        self.light_attack_event, self.start_blocking_event, self.end_blocking_event = pg.USEREVENT + 9,\
-        pg.USEREVENT + 10, pg.USEREVENT + 11, pg.USEREVENT + 12, pg.USEREVENT + 13, pg.USEREVENT + 14, pg.USEREVENT + 15
+        self.one_step_event, self.jump_event, self.start_sitting_event, self.stand_up_event, self.light_attack_event,\
+        self.start_blocking_event, self.end_blocking_event, self.sitting_light_damage_event, self.light_damage_event =\
+            pg.USEREVENT + 9, pg.USEREVENT + 10, pg.USEREVENT + 11, pg.USEREVENT + 12, pg.USEREVENT + 13,\
+            pg.USEREVENT + 14, pg.USEREVENT + 15, pg.USEREVENT + 16, pg.USEREVENT + 17
         ''' Конец Ивентов '''
         # frames - атрибут класса,
         # список для хранения последовательности кадров спрайта:
@@ -78,14 +79,23 @@ class Dio(pg.sprite.Sprite):
     def light_attack(self):
         pg.time.set_timer(self.light_attack_event, 400)
 
+    def sitting_light_damage(self):
+        global hp_dio
+        pg.time.set_timer(self.sitting_light_damage_event, 200)
+
+    def light_damage(self):
+        global hp_dio
+        pg.time.set_timer(self.light_damage_event, 200)
+
 
 class Jotaro(pg.sprite.Sprite):
     def __init__(self, sheet, x, y):
         super().__init__(all_sprites)
         ''' Ивенты Джотаро '''
-        self.one_step_event, self.jump_event, self.start_sitting_event, self.stand_up_event,\
-        self.light_attack_event, self.start_blocking_event, self.end_blocking_event = pg.USEREVENT + 1,\
-        pg.USEREVENT + 2, pg.USEREVENT + 3, pg.USEREVENT + 4, pg.USEREVENT + 5, pg.USEREVENT + 6, pg.USEREVENT + 7
+        self.one_step_event, self.jump_event, self.start_sitting_event, self.stand_up_event, self.light_attack_event,\
+        self.start_blocking_event, self.end_blocking_event, self.sitting_light_damage_event, self.light_damage_event =\
+            pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3, pg.USEREVENT + 4, pg.USEREVENT + 5, pg.USEREVENT + 6,\
+            pg.USEREVENT + 7, pg.USEREVENT + 18, pg.USEREVENT + 19
         ''' Конец Ивентов '''
         # frames - атрибут класса,
         # список для хранения последовательности кадров спрайта:
@@ -135,6 +145,14 @@ class Jotaro(pg.sprite.Sprite):
     def light_attack(self):
         pg.time.set_timer(self.light_attack_event, 630)
 
+    def sitting_light_damage(self):
+        global hp_jotaro
+        pg.time.set_timer(self.sitting_light_damage_event, 200)
+
+    def light_damage(self):
+        global hp_jotaro
+        pg.time.set_timer(self.light_damage_event, 200)
+
 
 if __name__ == '__main__':
     # Инициализируем pygame
@@ -154,10 +172,12 @@ if __name__ == '__main__':
     # Задаём кол-во хп и маны у персонажей
     hp_jotaro, mana_jotaro, hp_dio, mana_dio = 100, 30, 100, 30
     # Задаём флаги событий персонажей
-    flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro, flag_blocking_jotaro = \
-        False, False, False, False, False
-    flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio = \
-        False, False, False, False, False
+    flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro, flag_blocking_jotaro,\
+    flag_jotaro_tacking_damage = \
+        False, False, False, False, False, False
+    flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio,\
+    flag_dio_tacking_damage = \
+        False, False, False, False, False, False
     # Создаём экземпляры анимированных спрайтов:
     sprite_jotaro = Jotaro(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
     sprite_dio = Dio(sprite_dio_afk_left_side, x_dio, y_dio)
@@ -171,11 +191,12 @@ if __name__ == '__main__':
     running = True
     # Главный игровой цикл:
     while running:
-        if x_jotaro < x_dio:
-            flag_stop_jotaro = False
-            flag_stop_dio = False
-        elif hp_jotaro <= 0 or hp_dio <= 0:
-            end = True
+        if hp_jotaro <= 0:
+            print('Победил Дио')
+            running = False
+        elif hp_dio <= 0:
+            print('Победил Джотаро')
+            running = False
         for event in pg.event.get():
             keys = pg.key.get_pressed()
             flags_jotaro = {flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro}
@@ -216,6 +237,11 @@ if __name__ == '__main__':
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = Jotaro(sprite_jotaro_light_attack, x_jotaro, y_jotaro)
+                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio):
+                        hp_dio -= 10
+                        sprite_dio.kill()
+                        sprite_dio = Dio(sprite_dio_light_attack_taking_damage, x_dio, y_dio)
+                        sprite_dio.light_damage()
                     sprite_jotaro.light_attack()
                 elif keys[pg.K_l] and flag_sitting_jotaro and not flag_attacking_jotaro:
                     sprite_jotaro.kill()
@@ -331,6 +357,11 @@ if __name__ == '__main__':
                 else:
                     sprite_dio = Dio(sprite_dio_afk_left_side, x_dio, y_dio)
                 flag_attacking_dio = False
+            elif event.type == sprite_dio.light_damage_event:
+                sprite_dio.kill()
+                pg.time.set_timer(sprite_dio.light_damage_event, 0)
+                sprite_dio = Dio(sprite_dio_afk_left_side, x_dio, y_dio)
+                flag_dio_tacking_damage = False
 
         screen.fill(pg.Color('white'))
         all_sprites.draw(screen)
