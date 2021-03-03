@@ -199,8 +199,10 @@ if __name__ == '__main__':
             running = False
         for event in pg.event.get():
             keys = pg.key.get_pressed()
-            flags_jotaro = {flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro}
-            flags_dio = {flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_walking_dio}
+            flags_jotaro = {flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro,
+                            flag_jotaro_tacking_damage}
+            flags_dio = {flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_walking_dio,
+                         flag_dio_tacking_damage}
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
@@ -237,16 +239,29 @@ if __name__ == '__main__':
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = Jotaro(sprite_jotaro_light_attack, x_jotaro, y_jotaro)
-                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio):
+                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_jumping_dio:
                         hp_dio -= 10
                         sprite_dio.kill()
-                        sprite_dio = Dio(sprite_dio_light_attack_taking_damage, x_dio, y_dio)
-                        sprite_dio.light_damage()
+                        if flag_sitting_dio:
+                            sprite_dio = Dio(sprite_dio_sitting_light_attack_taking_damage, x_dio, y_dio)
+                            sprite_dio.sitting_light_damage()
+                        else:
+                            sprite_dio = Dio(sprite_dio_light_attack_taking_damage, x_dio, y_dio)
+                            sprite_dio.light_damage()
                     sprite_jotaro.light_attack()
                 elif keys[pg.K_l] and flag_sitting_jotaro and not flag_attacking_jotaro:
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = Jotaro(sprite_jotaro_sitting_light_attack, x_jotaro, y_jotaro)
+                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_jumping_dio:
+                        hp_dio -= 10
+                        sprite_dio.kill()
+                        if flag_sitting_dio:
+                            sprite_dio = Dio(sprite_dio_sitting_light_attack_taking_damage, x_dio, y_dio)
+                            sprite_dio.sitting_light_damage()
+                        else:
+                            sprite_dio = Dio(sprite_dio_light_attack_taking_damage, x_dio, y_dio)
+                            sprite_dio.light_damage()
                     sprite_jotaro.light_attack()
 
                 # Обработка клавиш для Дио
@@ -281,7 +296,7 @@ if __name__ == '__main__':
                 elif keys[pg.K_KP7] and not any(flags_dio):
                     sprite_dio.kill()
                     flag_attacking_dio = True
-                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio):
+                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_sitting_jotaro:
                         hp_jotaro -= 7.5
                         sprite_jotaro.kill()
                         sprite_jotaro = Jotaro(sprite_jotaro_light_attack_taking_damage, x_jotaro, y_jotaro)
@@ -292,6 +307,15 @@ if __name__ == '__main__':
                     sprite_dio.kill()
                     flag_attacking_dio = True
                     sprite_dio = Dio(sprite_dio_sitting_light_attack, x_dio, y_dio)
+                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_jumping_jotaro:
+                        hp_jotaro -= 7.5
+                        sprite_jotaro.kill()
+                        if flag_sitting_jotaro:
+                            sprite_jotaro = Jotaro(sprite_jotaro_sitting_light_attack_taking_damage, x_jotaro, y_jotaro)
+                            sprite_jotaro.sitting_light_damage()
+                        else:
+                            sprite_jotaro = Jotaro(sprite_jotaro_light_attack_taking_damage, x_jotaro, y_jotaro)
+                            sprite_jotaro.light_damage()
                     sprite_dio.light_attack()
 
             # Добавление event'ов для проигрывания анимаций Джотаро
@@ -326,6 +350,11 @@ if __name__ == '__main__':
                 sprite_jotaro.kill()
                 pg.time.set_timer(sprite_jotaro.light_damage_event, 0)
                 sprite_jotaro = Jotaro(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
+                flag_jotaro_tacking_damage = False
+            elif event.type == sprite_jotaro.sitting_light_damage_event:
+                sprite_jotaro.kill()
+                pg.time.set_timer(sprite_jotaro.sitting_light_damage_event, 0)
+                sprite_jotaro = Jotaro(sprite_jotaro_sitting, x_jotaro, y_jotaro)
                 flag_jotaro_tacking_damage = False
 
             # Добавление отпускания
@@ -371,6 +400,11 @@ if __name__ == '__main__':
                 sprite_dio.kill()
                 pg.time.set_timer(sprite_dio.light_damage_event, 0)
                 sprite_dio = Dio(sprite_dio_afk_left_side, x_dio, y_dio)
+                flag_dio_tacking_damage = False
+            elif event.type == sprite_dio.sitting_light_damage_event:
+                sprite_dio.kill()
+                pg.time.set_timer(sprite_dio.sitting_light_damage_event, 0)
+                sprite_dio = Dio(sprite_dio_sitting, x_dio, y_dio)
                 flag_dio_tacking_damage = False
 
         screen.fill(pg.Color('white'))
