@@ -281,6 +281,11 @@ if __name__ == '__main__':
                 elif keys[pg.K_KP7] and not any(flags_dio):
                     sprite_dio.kill()
                     flag_attacking_dio = True
+                    if pg.sprite.collide_mask(sprite_jotaro, sprite_dio):
+                        hp_jotaro -= 7.5
+                        sprite_jotaro.kill()
+                        sprite_jotaro = Jotaro(sprite_jotaro_light_attack_taking_damage, x_jotaro, y_jotaro)
+                        sprite_jotaro.light_damage()
                     sprite_dio = Dio(sprite_dio_light_attack, x_dio, y_dio)
                     sprite_dio.light_attack()
                 elif keys[pg.K_KP7] and flag_sitting_dio and not flag_attacking_dio:
@@ -317,6 +322,11 @@ if __name__ == '__main__':
                 else:
                     sprite_jotaro = Jotaro(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
                 flag_attacking_jotaro = False
+            elif event.type == sprite_jotaro.light_damage_event:
+                sprite_jotaro.kill()
+                pg.time.set_timer(sprite_jotaro.light_damage_event, 0)
+                sprite_jotaro = Jotaro(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
+                flag_jotaro_tacking_damage = False
 
             # Добавление отпускания
             elif event.type == pg.KEYUP:
