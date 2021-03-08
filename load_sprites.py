@@ -69,9 +69,9 @@ sprite_jotaro_sitting_light_attack = [load_image('jotaro_sitting_light_attack8.p
                                       load_image('jotaro_sitting_light_attack3.png'),
                                       load_image('jotaro_sitting_light_attack2.png'),
                                       load_image('jotaro_sitting_light_attack1.png')]
-sprite_jotaro_blocking1 = [load_image('jotaro_block1.png'), load_image('jotaro_block2.png')]
-sprite_jotaro_blocking2 = [load_image('jotaro_block3.png')]
-sprite_jotaro_blocking3 = [load_image('jotaro_block4.png'), load_image('jotaro_block5.png'),
+sprite_jotaro_start_blocking = [load_image('jotaro_block1.png'), load_image('jotaro_block2.png')]
+sprite_jotaro_blocking = [load_image('jotaro_block3.png')]
+sprite_jotaro_end_blocking = [load_image('jotaro_block4.png'), load_image('jotaro_block5.png'),
                            load_image('jotaro_block6.png'), load_image('jotaro_block7.png'),
                            load_image('jotaro_block8.png'), load_image('jotaro_block9.png'),
                            load_image('jotaro_block10.png'), load_image('jotaro_block11.png'),
@@ -145,3 +145,10 @@ sprite_jotaro_sitting_light_attack_taking_damage = [load_image('jotaro_sitting_l
 sprite_dio_sitting_light_attack_taking_damage = [load_image('dio_sitting_light_attack_taking_damage1.png'),
                                                  load_image('dio_sitting_light_attack_taking_damage2.png'),
                                                  load_image('dio_sitting_light_attack_taking_damage3.png')]
+sprite_dio_start_blocking = [load_image('dio_block1.png'), load_image('dio_block2.png')]
+sprite_dio_blocking = [load_image('dio_block3.png')]
+sprite_dio_end_blocking = [load_image('dio_block4.png'), load_image('dio_block5.png'),
+                        load_image('dio_block6.png'), load_image('dio_block7.png'),
+                        load_image('dio_block8.png'), load_image('dio_block9.png'),
+                        load_image('dio_block10.png'), load_image('dio_block11.png'),
+                        load_image('dio_block12.png')]
