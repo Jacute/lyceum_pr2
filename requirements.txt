@@ -1,0 +1,5 @@
+Python 3.9.1
+
+Package          Version
+---------------- -------
+pygame           2.0.1 
