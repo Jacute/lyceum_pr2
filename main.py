@@ -169,9 +169,9 @@ class Jotaro(pg.sprite.Sprite):
 if __name__ == '__main__':
     # Инициализируем pygame
     pg.init()
-    pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
+    '''pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
     pg.mixer.music.set_volume(0.75)
-    pg.mixer.music.play(-1)
+    pg.mixer.music.play(-1)'''
     pg.display.set_caption('Jotaro VS Dio')
     # Задаём размер окна
     size = width, height = 800, 600
@@ -255,26 +255,34 @@ if __name__ == '__main__':
                     flag_attacking_jotaro = True
                     sprite_jotaro = Jotaro(sprite_jotaro_light_attack, x_jotaro, y_jotaro)
                     if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_jumping_dio:
-                        hp_dio -= 10
-                        sprite_dio.kill()
-                        if flag_sitting_dio:
+                        if flag_blocking_dio:
+                            hp_dio -= 5
+                        elif flag_sitting_dio:
+                            sprite_dio.kill()
                             sprite_dio = Dio(sprite_dio_sitting_light_attack_taking_damage, x_dio, y_dio)
                             sprite_dio.sitting_light_damage()
+                            hp_dio -= 10
                         else:
+                            sprite_dio.kill()
                             sprite_dio = Dio(sprite_dio_light_attack_taking_damage, x_dio, y_dio)
                             sprite_dio.light_damage()
+                            hp_dio -= 10
                     sprite_jotaro.light_attack()
                 elif keys[pg.K_l] and flag_sitting_jotaro and not flag_attacking_jotaro:
                     sprite_jotaro.kill()
                     flag_attacking_jotaro = True
                     sprite_jotaro = Jotaro(sprite_jotaro_sitting_light_attack, x_jotaro, y_jotaro)
                     if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_jumping_dio:
-                        hp_dio -= 10
-                        sprite_dio.kill()
-                        if flag_sitting_dio:
+                        if flag_blocking_dio:
+                            hp_dio -= 5
+                        elif flag_sitting_dio:
+                            hp_dio -= 10
+                            sprite_dio.kill()
                             sprite_dio = Dio(sprite_dio_sitting_light_attack_taking_damage, x_dio, y_dio)
                             sprite_dio.sitting_light_damage()
                         else:
+                            hp_dio -= 10
+                            sprite_dio.kill()
                             sprite_dio = Dio(sprite_dio_light_attack_taking_damage, x_dio, y_dio)
                             sprite_dio.light_damage()
                     sprite_jotaro.light_attack()
@@ -317,10 +325,13 @@ if __name__ == '__main__':
                     sprite_dio.kill()
                     flag_attacking_dio = True
                     if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_sitting_jotaro:
-                        hp_jotaro -= 7.5
-                        sprite_jotaro.kill()
-                        sprite_jotaro = Jotaro(sprite_jotaro_light_attack_taking_damage, x_jotaro, y_jotaro)
-                        sprite_jotaro.light_damage()
+                        if flag_blocking_jotaro:
+                            hp_jotaro -= 3.75
+                        else:
+                            hp_jotaro -= 7.5
+                            sprite_jotaro.kill()
+                            sprite_jotaro = Jotaro(sprite_jotaro_light_attack_taking_damage, x_jotaro, y_jotaro)
+                            sprite_jotaro.light_damage()
                     sprite_dio = Dio(sprite_dio_light_attack, x_dio, y_dio)
                     sprite_dio.light_attack()
                 elif keys[pg.K_KP7] and flag_sitting_dio and not flag_attacking_dio:
@@ -328,14 +339,18 @@ if __name__ == '__main__':
                     flag_attacking_dio = True
                     sprite_dio = Dio(sprite_dio_sitting_light_attack, x_dio, y_dio)
                     if pg.sprite.collide_mask(sprite_jotaro, sprite_dio) and not flag_jumping_jotaro:
-                        hp_jotaro -= 7.5
-                        sprite_jotaro.kill()
-                        if flag_sitting_jotaro:
+                        if flag_blocking_jotaro:
+                            hp_jotaro -= 3.75
+                        elif flag_sitting_jotaro:
+                            sprite_jotaro.kill()
                             sprite_jotaro = Jotaro(sprite_jotaro_sitting_light_attack_taking_damage, x_jotaro, y_jotaro)
                             sprite_jotaro.sitting_light_damage()
+                            hp_jotaro -= 7.5
                         else:
+                            sprite_jotaro.kill()
                             sprite_jotaro = Jotaro(sprite_jotaro_light_attack_taking_damage, x_jotaro, y_jotaro)
                             sprite_jotaro.light_damage()
+                            hp_jotaro -= 7.5
                     sprite_dio.light_attack()
                 elif keys[pg.K_KP8] and not any(flags_dio):
                     sprite_dio.kill()
