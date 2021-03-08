@@ -27,9 +27,9 @@ class Dio(pg.sprite.Sprite):
         super().__init__(all_sprites)
         ''' Ивенты Дио '''
         self.one_step_event, self.jump_event, self.start_sitting_event, self.stand_up_event, self.light_attack_event,\
-        self.start_blocking_event, self.end_blocking_event, self.sitting_light_damage_event, self.light_damage_event,\
-            = pg.USEREVENT + 9, pg.USEREVENT + 10, pg.USEREVENT + 11, pg.USEREVENT + 12, pg.USEREVENT + 13,\
-              pg.USEREVENT + 14, pg.USEREVENT + 15, pg.USEREVENT + 16, pg.USEREVENT + 17
+            self.start_blocking_event, self.end_blocking_event, self.sitting_light_damage_event,\
+            self.light_damage_event = pg.USEREVENT + 9, pg.USEREVENT + 10, pg.USEREVENT + 11, pg.USEREVENT + 12,\
+            pg.USEREVENT + 13, pg.USEREVENT + 14, pg.USEREVENT + 15, pg.USEREVENT + 16, pg.USEREVENT + 17
         ''' Конец Ивентов '''
         # frames - атрибут класса,
         # список для хранения последовательности кадров спрайта:
@@ -99,9 +99,9 @@ class Jotaro(pg.sprite.Sprite):
         super().__init__(all_sprites)
         ''' Ивенты Джотаро '''
         self.one_step_event, self.jump_event, self.start_sitting_event, self.stand_up_event, self.light_attack_event,\
-        self.start_blocking_event, self.end_blocking_event, self.sitting_light_damage_event, self.light_damage_event\
-            = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3, pg.USEREVENT + 4, pg.USEREVENT + 5,\
-              pg.USEREVENT + 6, pg.USEREVENT + 7, pg.USEREVENT + 18, pg.USEREVENT + 19
+            self.start_blocking_event, self.end_blocking_event, self.sitting_light_damage_event,\
+            self.light_damage_event = pg.USEREVENT + 1, pg.USEREVENT + 2, pg.USEREVENT + 3, pg.USEREVENT + 4,\
+            pg.USEREVENT + 5, pg.USEREVENT + 6, pg.USEREVENT + 7, pg.USEREVENT + 18, pg.USEREVENT + 19
         ''' Конец Ивентов '''
         # frames - атрибут класса,
         # список для хранения последовательности кадров спрайта:
@@ -169,9 +169,9 @@ class Jotaro(pg.sprite.Sprite):
 if __name__ == '__main__':
     # Инициализируем pygame
     pg.init()
-    '''pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
+    pg.mixer.music.load(os.path.abspath("sounds/Danton - JC OST.wav"))
     pg.mixer.music.set_volume(0.75)
-    pg.mixer.music.play(-1)'''
+    pg.mixer.music.play(-1)
     pg.display.set_caption('Jotaro VS Dio')
     # Задаём размер окна
     size = width, height = 800, 600
@@ -188,11 +188,9 @@ if __name__ == '__main__':
     hp_jotaro, mana_jotaro, hp_dio, mana_dio = 100, 30, 100, 30
     # Задаём флаги событий персонажей
     flag_walking_jotaro, flag_jumping_jotaro, flag_sitting_jotaro, flag_attacking_jotaro, flag_blocking_jotaro,\
-    flag_jotaro_tacking_damage = \
-        False, False, False, False, False, False
+        flag_jotaro_tacking_damage = False, False, False, False, False, False
     flag_walking_dio, flag_jumping_dio, flag_sitting_dio, flag_attacking_dio, flag_blocking_dio,\
-    flag_dio_tacking_damage = \
-        False, False, False, False, False, False
+        flag_dio_tacking_damage = False, False, False, False, False, False
     # Создаём экземпляры анимированных спрайтов:
     sprite_jotaro = Jotaro(sprite_jotaro_afk_right_side, x_jotaro, y_jotaro)
     sprite_dio = Dio(sprite_dio_afk_left_side, x_dio, y_dio)
